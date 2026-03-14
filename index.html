@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4-Letter .com Finder — Real Results</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Barlow+Condensed:wght@400;600;700;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f5f0e8;
+  --paper: #faf7f2;
+  --ink: #1a1208;
+  --muted: #7a6e5f;
+  --border: #d4c9b8;
+  --green: #1a6b3a;
+  --green-light: #d4edda;
+  --red: #8b1a1a;
+  --red-light: #f8d7da;
+  --amber: #92600a;
+  --amber-light: #fff3cd;
+  --accent: #c0392b;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Barlow Condensed', sans-serif;
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* Halftone texture overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.08) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.5;
+}
+
+/* Newspaper header */
+.masthead {
+  background: var(--ink);
+  color: var(--bg);
+  text-align: center;
+  padding: 28px 20px 20px;
+  border-bottom: 6px double var(--bg);
+  position: relative;
+}
+
+.masthead-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  letter-spacing: 1px;
+}
+
+.masthead h1 {
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.masthead h1 em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.masthead-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  opacity: 0.7;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+.masthead-rule {
+  border: none;
+  border-top: 2px solid var(--bg);
+  margin: 14px auto;
+  max-width: 600px;
+  opacity: 0.3;
+}
+
+/* Main layout */
+.layout {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 30px;
+}
+
+@media (max-width: 720px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+/* Panels */
+.panel {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 24px;
+  position: relative;
+}
+
+.panel-title {
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title::before {
+  content: '§';
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+/* Form elements */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-row label {
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted);
+}
+
+input[type=text], select {
+  background: var(--bg);
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  padding: 10px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  outline: none;
+  width: 100%;
+  appearance: none;
+  transition: background 0.15s;
+}
+
+input[type=text]:focus, select:focus {
+  background: #fff;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+input[type=text]::placeholder { color: var(--border); font-weight: 400; }
+
+/* charset checkboxes */
+.charset-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.char-pill {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.1s;
+  user-select: none;
+}
+
+.char-pill.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* Big scan button */
+.scan-btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  width: 100%;
+  padding: 16px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-btn:hover { background: var(--accent); }
+.scan-btn:active { transform: translate(2px, 2px); box-shadow: none !important; }
+.scan-btn:not(:disabled) { box-shadow: 4px 4px 0 var(--accent); }
+.scan-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+.stop-btn {
+  background: transparent;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  width: 100%;
+  padding: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.1s;
+  display: none;
+}
+
+.stop-btn:hover { background: var(--red-light); }
+
+/* Progress */
+.progress-wrap {
+  margin: 14px 0;
+  display: none;
+}
+
+.progress-track {
+  background: var(--border);
+  height: 8px;
+  border: 1px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--ink);
+  width: 0%;
+  transition: width 0.3s;
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  background: var(--accent);
+}
+
+.progress-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Stats */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.stat {
+  border: 1.5px solid var(--border);
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.stat-n {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+  display: block;
+}
+
+.stat-n.green { color: var(--green); }
+.stat-n.red { color: var(--red); }
+.stat-n.muted { color: var(--muted); }
+
+.stat-l {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Results */
+.results-panel {
+  grid-column: 1 / -1;
+}
+
+.results-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.toolbar-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.tb-btn {
+  background: var(--bg);
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  padding: 6px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s;
+  text-transform: uppercase;
+}
+
+.tb-btn:hover { background: var(--ink); color: var(--bg); }
+.tb-btn.primary { background: var(--green); border-color: var(--green); color: white; }
+.tb-btn.primary:hover { background: #0d4a26; }
+
+/* Domain list */
+.domain-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 6px;
+  max-height: 460px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.domain-list::-webkit-scrollbar { width: 6px; }
+.domain-list::-webkit-scrollbar-track { background: var(--bg); }
+.domain-list::-webkit-scrollbar-thumb { background: var(--border); }
+
+.domain-card {
+  background: var(--green-light);
+  border: 1.5px solid var(--green);
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.12s;
+  animation: popIn 0.25s ease backwards;
+  position: relative;
+}
+
+.domain-card:hover {
+  background: var(--green);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.domain-card .name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: block;
+  color: var(--green);
+}
+
+.domain-card:hover .name { color: white; }
+
+.domain-card .tld {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.domain-card:hover .tld { color: rgba(255,255,255,0.7); }
+
+.domain-card .copied-tip {
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.domain-card.flash .copied-tip { opacity: 1; }
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.8) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.empty-msg {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 2;
+  grid-column: 1 / -1;
+}
+
+/* How it works */
+.how-box {
+  background: var(--amber-light);
+  border: 1.5px solid var(--amber);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.how-box p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--amber);
+  line-height: 1.7;
+}
+
+.how-box strong { color: var(--ink); }
+
+/* Info sidebar items */
+.info-item {
+  border-left: 3px solid var(--accent);
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: var(--bg);
+}
+
+.info-item h4 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.info-item p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* queue preview chips */
+.queue-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-height: 80px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.queue-chip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  color: var(--muted);
+}
+
+.queue-chip.current {
+  background: var(--amber-light);
+  border-color: var(--amber);
+  color: var(--amber);
+  font-weight: 700;
+}
+
+/* Scanning animation */
+@keyframes scanPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.scanning-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--amber);
+  font-weight: 600;
+  animation: scanPulse 1s infinite;
+  margin-bottom: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-top">
+    <span>EST. 2025 — DOMAIN HUNTER</span>
+    <span id="liveClock"></span>
+    <span>RDAP · NO API KEY · FREE</span>
+  </div>
+  <hr class="masthead-rule">
+  <h1>4-Letter .<em>com</em><br>Domain Scanner</h1>
+  <div class="masthead-sub">Real availability · RDAP lookup · Zero cost</div>
+</div>
+
+<div class="layout">
+
+  <!-- Left: controls -->
+  <div>
+    <div class="panel" style="margin-bottom:20px">
+      <div class="panel-title">How It Works</div>
+      <div class="how-box">
+        <p>
+          Uses <strong>RDAP</strong> (Registration Data Access Protocol) — the official public registry lookup.<br><br>
+          <strong>HTTP 404</strong> = domain not registered = <strong>FREE ✅</strong><br>
+          <strong>HTTP 200</strong> = registered = taken ❌<br><br>
+          No API key. No account. 100% free and accurate.
+        </p>
+      </div>
+
+      <div class="panel-title">Configure Scan</div>
+
+      <div class="form-row">
+        <label>Starting prefix (1–3 letters)</label>
+        <input type="text" id="prefix" placeholder="e.g. az or k" maxlength="3"
+               oninput="this.value=this.value.replace(/[^a-z0-9-]/gi,'').toLowerCase(); updatePreview()">
+      </div>
+
+      <div class="form-row">
+        <label>Ending suffix (optional)</label>
+        <input type="text" id="suffix" placeholder="e.g. o or ly (optional)" maxlength="3"
+               oninput="this.value=this.value.replace(/[^a-z0-9]/gi,'').toLowerCase(); updatePreview()">
+      </div>
+
+      <div class="form-row">
+        <label>Characters to use</label>
+        <div class="charset-grid" id="charsetGrid"></div>
+      </div>
+
+      <div class="form-row">
+        <label>Speed (delay between checks)</label>
+        <select id="speed">
+          <option value="800">Fast — 800ms (may hit rate limit)</option>
+          <option value="1200" selected>Normal — 1.2s (recommended)</option>
+          <option value="2000">Safe — 2s (very reliable)</option>
+          <option value="3000">Slow — 3s (safest)</option>
+        </select>
+      </div>
+
+      <div id="previewBox" style="margin-bottom:14px; display:none">
+        <div class="form-row">
+          <label>Will check <span id="previewCount">0</span> domains</label>
+          <div class="queue-chips" id="previewChips"></div>
+        </div>
+      </div>
+
+      <button class="scan-btn" onclick="startScan()" id="scanBtn">▶ Start Scan</button>
+      <button class="stop-btn" onclick="stopScan()" id="stopBtn">■ Stop</button>
+
+      <div class="progress-wrap" id="progressWrap">
+        <div class="scanning-label" id="currentDomain">Scanning...</div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-label">
+          <span id="progressText">0 / 0</span>
+          <span id="etaText">ETA: —</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Session Stats</div>
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-n muted" id="statChecked">0</span>
+          <div class="stat-l">Checked</div>
+        </div>
+        <div class="stat">
+          <span class="stat-n green" id="statFree">0</span>
+          <div class="stat-l">Free ✅</div>
+        </div>
+        <div class="stat">
+          <span class="stat-n red" id="statTaken">0</span>
+          <div class="stat-l">Taken</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: sidebar tips -->
+  <div>
+    <div class="panel" style="margin-bottom:20px">
+      <div class="panel-title">Tips & Strategy</div>
+
+      <div class="info-item">
+        <h4>🎯 Best Starting Points</h4>
+        <p>Rare letter combos (qx, kz, vz) have better odds. Try prefixes: <strong>kz, qx, vw, zx, qk</strong></p>
+      </div>
+
+      <div class="info-item">
+        <h4>⚡ Rate Limits</h4>
+        <p>RDAP servers may throttle if you go too fast. If you see errors, switch to <strong>Safe — 2s</strong> mode.</p>
+      </div>
+
+      <div class="info-item">
+        <h4>✅ Verify Before Buying</h4>
+        <p>Always confirm on <strong>Namecheap</strong> or <strong>Cloudflare Registrar</strong> before paying.</p>
+      </div>
+
+      <div class="info-item">
+        <h4>📋 Save Results</h4>
+        <p>Hit <strong>Download</strong> to save your free domains list as a .txt file anytime during or after the scan.</p>
+      </div>
+
+      <div class="info-item">
+        <h4>🔤 Brandable Patterns</h4>
+        <p>Aim for <strong>CVCV</strong> (consonant-vowel-consonant-vowel) patterns like "kelo", "vura" — they sound like real brands.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Quick Single Check</div>
+      <div class="form-row">
+        <label>Type any 4-letter name</label>
+        <input type="text" id="singleInput" placeholder="e.g. kuma" maxlength="4"
+               oninput="this.value=this.value.replace(/[^a-z0-9-]/gi,'').toLowerCase()"
+               onkeydown="if(event.key==='Enter')singleCheck()">
+      </div>
+      <button class="scan-btn" style="font-size:1rem; padding:12px" onclick="singleCheck()" id="singleBtn">Check This Domain</button>
+      <div id="singleResult" style="margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:0.85rem; min-height:28px; text-align:center"></div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="panel results-panel">
+    <div class="results-toolbar">
+      <div class="panel-title" style="margin-bottom:0">Free Domains Found</div>
+      <div class="toolbar-btns">
+        <button class="tb-btn primary" onclick="downloadResults()" id="dlBtn">⬇ Download .txt</button>
+        <button class="tb-btn" onclick="copyAll()">Copy All</button>
+        <button class="tb-btn" onclick="clearResults()">Clear</button>
+      </div>
+    </div>
+    <div class="domain-list" id="domainList">
+      <div class="empty-msg">
+        Free domains will appear here as they are found.<br>
+        Configure your scan above and click ▶ Start Scan.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let freeResults = [];
+let scanning = false;
+let stopFlag = false;
+let checked = 0, taken = 0;
+let scanStart = null;
+let scanTotal = 0;
+let activeChars = new Set([...'abcdefghijklmnopqrstuvwxyz']);
+
+// ── Charset pills ──────────────────────────────────────────────────────────
+const CHARS = {
+  'a–e': 'abcde',
+  'f–j': 'fghij',
+  'k–o': 'klmno',
+  'p–t': 'pqrst',
+  'u–z': 'uvwxyz',
+  '0–9': '0123456789'
+};
+
+function buildCharsetGrid() {
+  const grid = document.getElementById('charsetGrid');
+  for (const [label, chars] of Object.entries(CHARS)) {
+    const pill = document.createElement('div');
+    pill.className = 'char-pill active';
+    pill.textContent = label;
+    if (chars === '0123456789') pill.classList.remove('active');
+    pill.onclick = () => {
+      pill.classList.toggle('active');
+      for (const c of chars) {
+        if (pill.classList.contains('active')) activeChars.add(c);
+        else activeChars.delete(c);
+      }
+      updatePreview();
+    };
+    grid.appendChild(pill);
+  }
+}
+
+// ── Combinations ──────────────────────────────────────────────────────────
+function getCombos() {
+  const prefix = document.getElementById('prefix').value.trim();
+  const suffix = document.getElementById('suffix').value.trim();
+  const chars = [...activeChars].sort();
+
+  if (!chars.length) return [];
+
+  const midLen = 4 - prefix.length - suffix.length;
+  if (midLen < 0) return [];
+  if (midLen === 0) return prefix + suffix ? [`${prefix}${suffix}`] : [];
+
+  const combos = [];
+  function recurse(cur, depth) {
+    if (depth === 0) { combos.push(prefix + cur + suffix); return; }
+    for (const c of chars) recurse(cur + c, depth - 1);
+  }
+  recurse('', midLen);
+  return combos;
+}
+
+function updatePreview() {
+  const combos = getCombos();
+  const box = document.getElementById('previewBox');
+  const countEl = document.getElementById('previewCount');
+  const chips = document.getElementById('previewChips');
+
+  if (!combos.length) { box.style.display = 'none'; return; }
+  box.style.display = '';
+  countEl.textContent = combos.length.toLocaleString();
+  chips.innerHTML = combos.slice(0, 20).map(d =>
+    `<div class="queue-chip">${d}</div>`
+  ).join('') + (combos.length > 20 ? `<div class="queue-chip">+${combos.length - 20} more</div>` : '');
+}
+
+// ── Detect if running inside Android app ──────────────────────────────────
+const isAndroid = typeof Native !== 'undefined';
+
+// ── RDAP check (web fallback only — Android uses Native service) ──────────
+async function rdapCheck(domain) {
+  try {
+    const res = await fetch(`https://rdap.verisign.com/com/v1/domain/${domain}`,
+      { method: 'GET', headers: { Accept: 'application/rdap+json' } });
+    if (res.status === 404) return 'free';
+    if (res.status === 200) return 'taken';
+    return 'error';
+  } catch (e) {
+    try {
+      const res2 = await fetch(`https://rdap.org/domain/${domain}`);
+      if (res2.status === 404) return 'free';
+      if (res2.status === 200) return 'taken';
+    } catch {}
+    return 'error';
+  }
+}
+
+// ── Single check ──────────────────────────────────────────────────────────
+async function singleCheck() {
+  const name = document.getElementById('singleInput').value.trim();
+  if (!name) return;
+  const domain = name.endsWith('.com') ? name : name + '.com';
+  const btn = document.getElementById('singleBtn');
+  const res = document.getElementById('singleResult');
+
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+  res.textContent = '⏳ Querying RDAP...';
+  res.style.color = '#92600a';
+
+  const status = await rdapCheck(domain);
+
+  btn.disabled = false;
+  btn.textContent = 'Check This Domain';
+
+  if (status === 'free') {
+    res.textContent = `✅ ${domain} appears FREE!`;
+    res.style.color = 'var(--green)';
+  } else if (status === 'taken') {
+    res.textContent = `❌ ${domain} is taken.`;
+    res.style.color = 'var(--red)';
+  } else {
+    res.textContent = `⚠ Could not determine — try again.`;
+    res.style.color = 'var(--amber)';
+  }
+}
+
+// ── Bulk scan ─────────────────────────────────────────────────────────────
+
+async function startScan() {
+  if (scanning) return;
+  const combos = getCombos();
+  if (!combos.length) { alert('Enter a valid prefix and make sure characters are selected.'); return; }
+
+  scanning = true;
+  stopFlag = false;
+  checked = 0; taken = 0;
+  scanStart = Date.now();
+  scanTotal = combos.length;
+
+  document.getElementById('scanBtn').disabled = true;
+  document.getElementById('stopBtn').style.display = '';
+  document.getElementById('progressWrap').style.display = '';
+  updateStats();
+
+  const delay = parseInt(document.getElementById('speed').value);
+
+  // ── Android: hand off to background Java service ──────────────────────
+  if (isAndroid) {
+    // Send domain list (without .com) to Java service
+    Native.startScan(JSON.stringify(combos), delay);
+    document.getElementById('currentDomain').textContent =
+      '▶ Running in background — you can switch apps freely';
+    return; // Java service drives everything from here
+  }
+
+  // ── Web browser: run in JS (pauses when tab hidden) ───────────────────
+  for (let i = 0; i < combos.length; i++) {
+    if (stopFlag) break;
+    const domain = combos[i] + '.com';
+    updateScanUI(i + 1, scanTotal, domain);
+    const status = await rdapCheck(domain);
+    checked++;
+    if (status === 'free') { freeResults.push(domain); addDomainCard(domain); }
+    else if (status === 'taken') taken++;
+    updateStats();
+    await new Promise(r => setTimeout(r, delay));
+  }
+
+  finishScan(stopFlag);
+}
+
+function stopScan() {
+  if (isAndroid) {
+    Native.stopScan();
+  }
+  stopFlag = true;
+  finishScan(true);
+}
+
+function finishScan(stopped) {
+  document.getElementById('currentDomain').textContent =
+    stopped ? '■ Scan stopped.' : '✅ Scan complete!';
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('scanBtn').disabled = false;
+  document.getElementById('stopBtn').style.display = 'none';
+  scanning = false;
+}
+
+function updateScanUI(c, total, current) {
+  document.getElementById('currentDomain').textContent = `▶ Checking: ${current}`;
+  document.getElementById('progressBar').style.width = ((c / total) * 100) + '%';
+  document.getElementById('progressText').textContent = `${c} / ${total}`;
+  const elapsed = (Date.now() - scanStart) / 1000;
+  const rate = c / elapsed || 0.01;
+  const remaining = (total - c) / rate;
+  document.getElementById('etaText').textContent = remaining > 60
+    ? `ETA: ~${Math.ceil(remaining / 60)}m`
+    : `ETA: ~${Math.ceil(remaining)}s`;
+}
+
+// ── Callbacks FROM Android Java service ──────────────────────────────────
+window.onNativeResult = function(domain, isFree) {
+  if (isFree) {
+    freeResults.push(domain);
+    addDomainCard(domain);
+  } else {
+    taken++;
+  }
+  updateStats();
+};
+
+window.onNativeProgress = function(c, total, found, current) {
+  checked = c;
+  scanTotal = total;
+  updateScanUI(c, total, current);
+  updateStats();
+};
+
+window.onNativeDone = function(c, total, found) {
+  finishScan(false);
+};
+
+// ── UI helpers ────────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('statChecked').textContent = checked;
+  document.getElementById('statFree').textContent = freeResults.length;
+  document.getElementById('statTaken').textContent = taken;
+}
+
+function addDomainCard(domain) {
+  const list = document.getElementById('domainList');
+  // Remove empty message
+  const empty = list.querySelector('.empty-msg');
+  if (empty) empty.remove();
+
+  const card = document.createElement('div');
+  card.className = 'domain-card';
+  const name = domain.replace('.com', '');
+  card.innerHTML = `
+    <span class="name">${name}</span>
+    <span class="tld">.com</span>
+    <div class="copied-tip">Copied!</div>
+  `;
+  card.style.animationDelay = '0ms';
+  card.onclick = () => {
+    navigator.clipboard.writeText(domain);
+    card.classList.add('flash');
+    setTimeout(() => card.classList.remove('flash'), 700);
+  };
+  list.appendChild(card);
+  list.scrollTop = list.scrollHeight;
+}
+
+function clearResults() {
+  if (scanning) { alert('Stop the scan first.'); return; }
+  freeResults = [];
+  checked = 0; taken = 0;
+  updateStats();
+  document.getElementById('domainList').innerHTML = `<div class="empty-msg">Free domains will appear here as they are found.<br>Configure your scan above and click ▶ Start Scan.</div>`;
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('currentDomain').textContent = '';
+}
+
+function downloadResults() {
+  if (!freeResults.length) { alert('No results yet.'); return; }
+  const blob = new Blob([freeResults.join('\n')], { type: 'text/plain' });
+  const a = document.createElement('a'); 
+  a.href = URL.createObjectURL(blob);
+  a.download = 'free_4letter_domains.txt';
+  a.click();
+}
+
+function copyAll() {
+  if (!freeResults.length) { alert('No results yet.'); return; }
+  navigator.clipboard.writeText(freeResults.join('\n'));
+  const btn = document.querySelector('.tb-btn:nth-child(2)');
+  const orig = btn.textContent;
+  btn.textContent = '✓ Copied!';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+// ── Clock ─────────────────────────────────────────────────────────────────
+function updateClock() {
+  document.getElementById('liveClock').textContent = new Date().toLocaleTimeString();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+buildCharsetGrid();
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+</body>
+</html>
